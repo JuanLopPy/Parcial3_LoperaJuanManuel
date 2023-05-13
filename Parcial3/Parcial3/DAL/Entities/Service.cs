@@ -2,7 +2,7 @@
 
 namespace Parcial3.DAL.Entities
 {
-    public class Services:Entity
+    public class Service:Entity
     {
         [Display(Name = "Servicio")]
         [MaxLength(50)]
