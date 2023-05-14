@@ -6,6 +6,8 @@ namespace Parcial3.DAL.Entities
 {
     public class VehicleDetail:Entity
     {
+
+        [Display(Name = ("Servicios"))]
         [ForeignKey("Servicio")]
         public int VehiculeId { get; set; }
 

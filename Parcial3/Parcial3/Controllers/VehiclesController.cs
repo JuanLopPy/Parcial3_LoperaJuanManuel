@@ -52,12 +52,10 @@ namespace Parcial3.Controllers
             return View();
         }
 
-        // POST: Vehicles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ServiceId,Owner,NumberPlate,Id")] Vehicle vehicle)
+        public async Task<IActionResult> Create(Vehicle vehicle)
         {
             if (ModelState.IsValid)
             {
@@ -66,6 +64,7 @@ namespace Parcial3.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name", vehicle.ServiceId);
             return View(vehicle);
         }
 
@@ -90,7 +89,7 @@ namespace Parcial3.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("ServiceId,Owner,NumberPlate,Id")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(Guid id,  Vehicle vehicle)
         {
             if (id != vehicle.Id)
             {
