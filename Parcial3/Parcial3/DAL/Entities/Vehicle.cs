@@ -6,7 +6,7 @@ namespace Parcial3.DAL.Entities
 {
     public class Vehicle:Entity
     {
-
+        [Display(Name = "Servicio")]
         [ForeignKey("Servicio")] 
         public Guid ServiceId { get; set; }
        public virtual Service Services { get; set; }

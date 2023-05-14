@@ -48,6 +48,7 @@ namespace Parcial3.Controllers
         // GET: Vehicles/Create
         public IActionResult Create()
         {
+            ViewData["ServiceId"] = new SelectList(_context.Services, "Id", "Name");
             return View();
         }
 
