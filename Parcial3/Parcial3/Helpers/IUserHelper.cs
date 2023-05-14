@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Parcial3.DAL.Entities;
+using Parcial3.Models;
+using Microsoft.AspNetCore.Identity;
+using ECommerce_Sat.Models;
 
 namespace Parcial3.Helpers
 {
@@ -18,7 +21,7 @@ namespace Parcial3.Helpers
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
 
-        //Task<SignInResult> LoginAsync(LoginViewModel loginViewModel);
+        Task<SignInResult> LoginAsync(LoginViewModel loginViewModel);
 
         Task LogoutAsync();
 
@@ -27,5 +30,6 @@ namespace Parcial3.Helpers
         Task<IdentityResult> UpdateUserAsync(User user);
 
         Task<User> GetUserAsync(Guid userId);
+        Task<User> AddUserAsync(AddUserViewModel addUserViewModel);
     }
 }

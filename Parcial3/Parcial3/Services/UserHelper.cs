@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using ECommerce_Sat.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Parcial3.DAL;
 using Parcial3.DAL.Entities;
 using Parcial3.Helpers;
+using Parcial3.Models;
 
 namespace Parcial3.Services
 {
@@ -44,7 +46,7 @@ namespace Parcial3.Services
             return await _userManager.CreateAsync(user, password);
         }
 
-       /* public async Task<User> AddUserAsync(AddUserViewModel addUserViewModel)
+       public async Task<User> AddUserAsync(AddUserViewModel addUserViewModel)
         {
             User user = new()
             {
@@ -64,7 +66,7 @@ namespace Parcial3.Services
             User newUser = await GetUserAsync(addUserViewModel.Username);
             await AddUserToRoleAsync(newUser, user.UserType.ToString());
             return newUser;
-        }*/
+        }
 
 
         public async Task AddUserToRoleAsync(User user, string roleName)
@@ -83,10 +85,10 @@ namespace Parcial3.Services
             return await _userManager.IsInRoleAsync(user, roleName);
         }
 
-       /* public async Task<SignInResult> LoginAsync(LoginViewModel loginViewModel)
+        public async Task<SignInResult> LoginAsync(LoginViewModel loginViewModel)
         {
             return await _signInManager.PasswordSignInAsync(loginViewModel.Username, loginViewModel.Password, loginViewModel.RememberMe, false);
-        }*/
+        }
 
         public async Task LogoutAsync()
         {
@@ -107,5 +109,7 @@ namespace Parcial3.Services
         {
             throw new NotImplementedException();
         }
+
+      
     }
 }
