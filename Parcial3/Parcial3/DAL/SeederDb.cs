@@ -22,7 +22,7 @@ namespace Parcial3.DAL
             await PopulateRolesAsync();
             await PopulateUserAsync("Juan", "Lopera", "Juan_lop_admin@yopmail.com", "1234", "Robledo", "1220", UserType.Admin);
             await PopulateUserAsync("Sofia", "salazar", "sofi_user@yopmail.com", "123", "Poblado", "12", UserType.User);
-
+            await PopulateServicesAsync();
             await _context.SaveChangesAsync();
         }
 
