@@ -12,8 +12,8 @@ using Parcial3.DAL;
 namespace Parcial3.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20230513214345_NewUsers")]
-    partial class NewUsers
+    [Migration("20230514045625_NewMigration")]
+    partial class NewMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -164,17 +164,12 @@ namespace Parcial3.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Price")
-                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -183,10 +178,6 @@ namespace Parcial3.Migrations
                         .IsUnique();
 
                     b.ToTable("Services");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Service");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Parcial3.DAL.Entities.User", b =>
@@ -279,7 +270,9 @@ namespace Parcial3.Migrations
 
             modelBuilder.Entity("Parcial3.DAL.Entities.Vehicle", b =>
                 {
-                    b.HasBaseType("Parcial3.DAL.Entities.Service");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NumberPlate")
                         .IsRequired()
@@ -291,19 +284,24 @@ namespace Parcial3.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("NumberPlate")
-                        .IsUnique()
-                        .HasFilter("[NumberPlate] IS NOT NULL");
+                        .IsUnique();
 
-                    b.HasDiscriminator().HasValue("Vehicle");
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("vehicles");
                 });
 
             modelBuilder.Entity("Parcial3.DAL.Entities.VehicleDetail", b =>
                 {
-                    b.HasBaseType("Parcial3.DAL.Entities.Vehicle");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
@@ -314,11 +312,12 @@ namespace Parcial3.Migrations
                     b.Property<int>("VehiculeId")
                         .HasColumnType("int");
 
-                    b.HasIndex("VehiculeId")
-                        .IsUnique()
-                        .HasFilter("[VehiculeId] IS NOT NULL");
+                    b.HasKey("Id");
 
-                    b.HasDiscriminator().HasValue("VehicleDetail");
+                    b.HasIndex("VehiculeId")
+                        .IsUnique();
+
+                    b.ToTable("VehicleDetails");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -370,6 +369,20 @@ namespace Parcial3.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Parcial3.DAL.Entities.Vehicle", b =>
+                {
+                    b.HasOne("Parcial3.DAL.Entities.Service", null)
+                        .WithMany("Vehicles")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Parcial3.DAL.Entities.Service", b =>
+                {
+                    b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
         }

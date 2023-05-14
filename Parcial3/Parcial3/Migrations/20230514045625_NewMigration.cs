@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Parcial3.Migrations
 {
     /// <inheritdoc />
-    public partial class NewUsers : Migration
+    public partial class NewMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,33 @@ namespace Parcial3.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VehicleDetails",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    VehiculeId = table.Column<int>(type: "int", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VehicleDetails", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,6 +188,26 @@ namespace Parcial3.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "vehicles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Owner = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    NumberPlate = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_vehicles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_vehicles_Services_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "Services",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -199,6 +246,29 @@ namespace Parcial3.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_Name",
+                table: "Services",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VehicleDetails_VehiculeId",
+                table: "VehicleDetails",
+                column: "VehiculeId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_vehicles_NumberPlate",
+                table: "vehicles",
+                column: "NumberPlate",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_vehicles_ServiceId",
+                table: "vehicles",
+                column: "ServiceId");
         }
 
         /// <inheritdoc />
@@ -220,10 +290,19 @@ namespace Parcial3.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "VehicleDetails");
+
+            migrationBuilder.DropTable(
+                name: "vehicles");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Services");
         }
     }
 }

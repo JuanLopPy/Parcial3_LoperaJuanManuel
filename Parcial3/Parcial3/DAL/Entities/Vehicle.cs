@@ -8,9 +8,9 @@ namespace Parcial3.DAL.Entities
     {
 
         [ForeignKey("Servicio")] 
-        public int ServiceId { get; set; }
-
-        [Display(Name = "Propietario")]
+        public Guid ServiceId { get; set; }
+       public virtual Service Services { get; set; }
+    [Display(Name = "Propietario")]
         [MaxLength(50)]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         public String? Owner { get; set; }

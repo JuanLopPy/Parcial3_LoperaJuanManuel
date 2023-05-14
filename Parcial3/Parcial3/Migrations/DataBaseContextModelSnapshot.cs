@@ -167,7 +167,6 @@ namespace Parcial3.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Price")
-                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -282,13 +281,15 @@ namespace Parcial3.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NumberPlate")
                         .IsUnique();
+
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("vehicles");
                 });
@@ -365,6 +366,20 @@ namespace Parcial3.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Parcial3.DAL.Entities.Vehicle", b =>
+                {
+                    b.HasOne("Parcial3.DAL.Entities.Service", null)
+                        .WithMany("Vehicles")
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Parcial3.DAL.Entities.Service", b =>
+                {
+                    b.Navigation("Vehicles");
                 });
 #pragma warning restore 612, 618
         }
