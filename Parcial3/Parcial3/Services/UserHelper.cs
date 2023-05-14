@@ -26,47 +26,84 @@ namespace Parcial3.Services
         }
 
 
-        public Task AddRoleAsync(string roleName)
+        public async Task AddRoleAsync(string roleName)
         {
-            throw new NotImplementedException();
+            bool roleExists = await _roleManager.RoleExistsAsync(roleName);
+
+            if (!roleExists)
+            {
+                await _roleManager.CreateAsync(new IdentityRole
+                {
+                    Name = roleName,
+                });
+            }
         }
 
-        public Task<IdentityResult> AddUserAsync(User user, string password)
+        public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
-            throw new NotImplementedException();
+            return await _userManager.CreateAsync(user, password);
         }
 
-        public Task AddUserToRoleAsync(User user, string roleName)
+       /* public async Task<User> AddUserAsync(AddUserViewModel addUserViewModel)
         {
-            throw new NotImplementedException();
+            User user = new()
+            {
+                Address = addUserViewModel.Address,
+                Document = addUserViewModel.Document,
+                Email = addUserViewModel.Username,
+                FirstName = addUserViewModel.FirstName,
+                LastName = addUserViewModel.LastName,
+                PhoneNumber = addUserViewModel.PhoneNumber,
+                UserName = addUserViewModel.Username,
+                UserType = addUserViewModel.UserType,
+            };
+       
+            IdentityResult result = await _userManager.CreateAsync(user, addUserViewModel.Password);
+            if (result != IdentityResult.Success) return null;
+
+            User newUser = await GetUserAsync(addUserViewModel.Username);
+            await AddUserToRoleAsync(newUser, user.UserType.ToString());
+            return newUser;
+        }*/
+
+
+        public async Task AddUserToRoleAsync(User user, string roleName)
+        {
+            await _userManager.AddToRoleAsync(user, roleName);
         }
 
-        public Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        public async Task<User> GetUserAsync(string email)
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public Task<User> GetUserAsync(string email)
+        public async Task<bool> IsUserInRoleAsync(User user, string roleName)
         {
-            throw new NotImplementedException();
+            return await _userManager.IsInRoleAsync(user, roleName);
+        }
+
+       /* public async Task<SignInResult> LoginAsync(LoginViewModel loginViewModel)
+        {
+            return await _signInManager.PasswordSignInAsync(loginViewModel.Username, loginViewModel.Password, loginViewModel.RememberMe, false);
+        }*/
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        {
+            return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+        }
+
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
         }
 
         public Task<User> GetUserAsync(Guid userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IsUserInRoleAsync(User user, string roleName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task LogoutAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IdentityResult> UpdateUserAsync(User user)
         {
             throw new NotImplementedException();
         }

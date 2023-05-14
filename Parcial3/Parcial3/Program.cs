@@ -12,8 +12,6 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<DataBaseContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
 builder.Services.AddTransient<SeederDb>();
 
 builder.Services.AddScoped<IUserHelper, UserHelper>();
@@ -29,7 +27,29 @@ builder.Services.AddIdentity<User, IdentityRole>(io =>
 }).AddEntityFrameworkStores<DataBaseContext>();
 
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Unauthorized";
+    options.AccessDeniedPath = "/Account/Unauthorized";
+});
+
+
 var app = builder.Build();
+
+app.UseRequestLocalization();
+
+SeederData();
+void SeederData()
+{
+    IServiceScopeFactory? scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+    using (IServiceScope? scope = scopedFactory.CreateScope())
+    {
+        SeederDb? service = scope.ServiceProvider.GetService<SeederDb>();
+        service.SeedAsync().Wait();
+    }
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

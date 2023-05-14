@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Parcial3.DAL.Entities
 {
-    public class Vehicle:Service
+    public class Vehicle:Entity
     {
 
         [ForeignKey("Servicio")] 
